@@ -517,7 +517,7 @@ def modifyQuiz():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", username=teacherName, noNetwork=True)
+        return render_template("modifyQuiz.html", username=teacherName, noNetwork=True)
     cur = conn.cursor()
     # Fetching all quiz's of the Teacher
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -526,7 +526,7 @@ def modifyQuiz():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", data=data, username=teacherName)
+    return render_template("modifyQuiz.html", data=data, username=teacherName)
 
 
 # Route to add Questions into the particular quiz
@@ -546,14 +546,14 @@ def addQuestion():
     if 1 <= int(crctAns) <= 4:
         pass
     else:
-        return render_template("teacherlogin1.html", error=True)
+        return render_template("modifyQuiz.html", error=True)
     print(quizId)
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     cur.execute('''SELECT NO_OF_QUESTIONS FROM QUIZ WHERE QUIZ_ID='{}' '''.format(quizId))
     totQuestions = cur.fetchall()[0][0]
@@ -561,7 +561,7 @@ def addQuestion():
     questions = cur.fetchall()[0][0]
     # Checking if the questions exceeding the total no of questions or not
     if int(questions) >= int(totQuestions):
-        return render_template("teacherlogin1.html", full=True, username=teacherName)
+        return render_template("modifyQuiz.html", full=True, username=teacherName)
     # Inserting the Question into the Database
     cur.execute('''INSERT INTO QUESTIONS VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
     '''.format(quizId, quesNo, ques, op1, op2, op3, op4, crctAns))
@@ -572,7 +572,7 @@ def addQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Fetching the Quiz id's of the user
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -581,7 +581,7 @@ def addQuestion():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionAdded=True, data=data, username=teacherName)
+    return render_template("modifyQuiz.html", questionAdded=True, data=data, username=teacherName)
 
 
 # Route to update a Question
@@ -604,7 +604,7 @@ def updateQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Updating the Question in the Database
     cur.execute('''UPDATE QUESTIONS SET QUESTION='{}', OP_1='{}', OP_2='{}', OP_3='{}', OP_4='{}', CRCT_ANS='{}' WHERE 
@@ -616,7 +616,7 @@ def updateQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Fetching the Quiz id's of the particular user
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -626,7 +626,7 @@ def updateQuestion():
     # Closing the Database Connection
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionUpdated=True, data=data, username=teacherName)
+    return render_template("modifyQuiz.html", questionUpdated=True, data=data, username=teacherName)
 
 
 # Route to Delete A Question
@@ -642,7 +642,7 @@ def deleteQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Deleting the Question from the Database
     cur.execute('''DELETE FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quizId, quesNo))
@@ -654,7 +654,7 @@ def deleteQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
+        return render_template("modifyQuiz.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
     data = cur.fetchall()
@@ -662,7 +662,7 @@ def deleteQuestion():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionDeleted=True, data=data, username=teacherName)
+    return render_template("modifyQuiz.html", questionDeleted=True, data=data, username=teacherName)
 
 
 # Route to Show all the Questions in the Quiz
