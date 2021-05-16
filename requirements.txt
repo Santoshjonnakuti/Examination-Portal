@@ -1,0 +1,22 @@
+Flask==1.1.2            # pip install flask
+
+Flask-Mail==0.9.1       # pip install flask-mail
+
+matplotlib              # pip install matplotlib
+
+PyMySQL==0.10.1         # pip install pymysql
+
+random                  # Comes with Python
+
+sqlite3                 # Comes with Python
+
+os                      # Comes with Python
+
+io                      # Comes with Python
+
+csv                     # Comes with Python
+
+datetime                # Comes with Python
+
+statistics              # Comes with Python
+
