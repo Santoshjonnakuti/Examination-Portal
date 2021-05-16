@@ -26,7 +26,6 @@ app = Flask(__name__)
 PASSWORD = ''
 with open('Details.txt', 'r') as f:
     PASSWORD = f.readline()
-    print(PASSWORD)
 
 
 def CreateQuizId():
@@ -49,7 +48,7 @@ def index():
         print(E)
         return render_template("index.html", noNetwork=True)
     cur = conn.cursor()
-    cur.execute('''SELECT PASSWORD, PORT, SEREVER, USERNAME, DB FROM EMAIL''')
+    cur.execute('''SELECT PASSWORD, PORT, SEREVER, USERNAME, DB FROM EMAIL WHERE PORT=587''')
     data = cur.fetchall()[0]
     app.config["MAIL_PASSWORD"] = data[0]
     app.config["MAIL_PORT"] = data[1]
