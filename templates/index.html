@@ -209,7 +209,8 @@
         <p name="dontHAA">Don't have an account?
         <button type="submit" name="signUp" disabled>Signup</button></p></form>
         <form class="forgot" action="/forgot" method="post">
-        <button type="submit" name="forgotPassword" disabled>Forgot Password</button></p></form>
+        <button type="submit" name="forgotPassword" disabled>Forgot Password</button>
+        </form>
       </div>
     </div>
   </body>
@@ -290,6 +291,10 @@
     if("{{creationValue}}" == "True")
     {
         alert("Account is successfully created...\nLogin to continue...");
+    }
+    if("{{PasswordUpdated}}" == "True")
+    {
+        alert("Password is successfully Updated...\nLogin to continue...");
     }
   }
   function showPwd()
