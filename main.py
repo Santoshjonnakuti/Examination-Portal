@@ -23,11 +23,10 @@ student_Id = None
 quiz_Id = None
 flag = 0
 app = Flask(__name__)
-app.config["MAIL_DEFAULT_SENDER"] = "portalexamination@gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "portalexamination@gmail.com"
+PASSWORD = ''
+with open('Details.txt', 'r') as f:
+    PASSWORD = f.readline()
+    print(PASSWORD)
 
 
 def CreateQuizId():
@@ -45,13 +44,19 @@ def CreateQuizId():
 def index():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("index.html", noNetwork=True)
     cur = conn.cursor()
-    cur.execute('''SELECT PASSWORD FROM EMAIL''')
-    app.config["MAIL_PASSWORD"] = cur.fetchall()[0][0]
+    cur.execute('''SELECT PASSWORD, PORT, SEREVER, USERNAME, DB FROM EMAIL''')
+    data = cur.fetchall()[0]
+    app.config["MAIL_PASSWORD"] = data[0]
+    app.config["MAIL_PORT"] = data[1]
+    app.config["MAIL_SERVER"] = data[2]
+    app.config["MAIL_DEFAULT_SENDER"] = data[3]
+    app.config["MAIL_USE_TLS"] = True
+    app.config["MAIL_USERNAME"] = data[4]
     conn.commit()
     conn.close()
     return render_template("index.html")
@@ -67,7 +72,7 @@ def login():
     quizId = request.form.get("quizId")
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("index.html", uName=uName, pwd=pwd, quizId=quizId, noNetwork=True)
@@ -102,7 +107,7 @@ def login():
                     student_Id = uName
                     quiz_Id = quizId
                     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
                     cur = conn.cursor()
                     cur.execute('''SELECT * FROM QUIZ WHERE QUIZ_ID='{}' '''.format(quizId))
                     d = cur.fetchall()
@@ -118,7 +123,7 @@ def login():
 
                     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                            user="DARKKNIGHT",
-                                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
                     cur = conn.cursor()
                     cur.execute(
                         '''SELECT NAME,EMAIL FROM STUDENT WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(quizId, uName))
@@ -142,7 +147,7 @@ def login():
                             print("time matched;")
                             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                                    user="DARKKNIGHT",
-                                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
                             cur = conn.cursor()
                             cur.execute('''SELECT FLAG FROM STUDENT WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(quizId,
                                                                                                                  uName))
@@ -159,7 +164,7 @@ def login():
                             print("time matched")
                             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                                    user="DARKKNIGHT",
-                                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
                             cur = conn.cursor()
                             cur.execute('''SELECT FLAG FROM STUDENT WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(quizId,
                                                                                                                  uName))
@@ -177,7 +182,7 @@ def login():
                             print("time matched;")
                             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                                    user="DARKKNIGHT",
-                                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
                             cur = conn.cursor()
                             cur.execute(
                                 '''SELECT FLAG FROM STUDENT WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(quizId, uName))
@@ -213,7 +218,7 @@ def startquiz():
     quizId = request.form.get("QuizId")
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("index.html")
@@ -255,7 +260,7 @@ def startquiz():
     totalQuestions = 2
     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                            user="DARKKNIGHT",
-                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
     cur = conn.cursor()
     cur.execute('''SELECT Q_NO, QUESTION, OP_1, OP_2, OP_3, OP_4 FROM QUESTIONS WHERE QUIZ_ID='{}' '''.format(
         quizId))
@@ -264,7 +269,7 @@ def startquiz():
     conn.close()
     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                            user="DARKKNIGHT",
-                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
     cur = conn.cursor()
     cur.execute('''SELECT NO_OF_QUESTIONS FROM QUIZ WHERE QUIZ_ID = '{}' '''.format(quizId))
     totalQuestions = cur.fetchall()
@@ -317,7 +322,7 @@ def singup():
         signupPassword = request.form.get("signupPassword")
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
             cur = conn.cursor()
             cur.execute('''SELECT EMAIL FROM TEACHER WHERE EMAIL='{}' '''.format(emailId))
             users = cur.fetchall()
@@ -384,7 +389,7 @@ def singup():
                                    signupPassword=signupPassword)
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return render_template("signup.html", specialCharacter=False, emailId=emailId, fName=fName, lName=lName,
@@ -419,7 +424,7 @@ def teacherHome():
 @app.route("/clear")
 def clear():
     global totalQuestions, teacher_Id
-    for ques in range(1, totalQuestions+1):
+    for ques in range(1, totalQuestions + 1):
         if os.path.exists("static/Pie_Question{}.png".format(ques)):
             os.remove("static/Pie_Question{}.png".format(ques))
     if os.path.exists("static/BarChartFrequencyOfMarksByStudents.png"):
@@ -436,7 +441,7 @@ def createQuiz():
     else:
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return render_template("TeacherCreateQuiz.html", username=teacher_Id, noNetwork=True)
@@ -470,7 +475,7 @@ def modifyQuiz():
     global teacher_Id
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", username=teacher_Id, noNetwork=True)
@@ -501,7 +506,7 @@ def addQuestion():
     print(quizId)
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -518,7 +523,7 @@ def addQuestion():
     conn.close()
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -545,7 +550,7 @@ def updateQuestion():
     print(quizId)
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -556,7 +561,7 @@ def updateQuestion():
     conn.close()
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -576,7 +581,7 @@ def deleteQuestion():
     quesNo = request.form.get("QuestionNumber")
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -586,7 +591,7 @@ def deleteQuestion():
     conn.close()
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("teacherlogin1.html", noNetwork=True)
@@ -605,7 +610,7 @@ def showAllQuestion():
     quizId = request.form.get("QuizId")
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return render_template("showAll.html", noNetwork=True)
@@ -633,7 +638,7 @@ def inviteStudents():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -648,7 +653,7 @@ def inviteStudents():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -687,7 +692,7 @@ def inviteStudents():
             try:
                 conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                        user="DARKKNIGHT",
-                                       passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                       passwd=PASSWORD, database="DBMSFLASKPROJECT")
             except Exception as E:
                 print(E)
                 return redirect("/teacherHome")
@@ -718,7 +723,7 @@ def view_results():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -733,7 +738,7 @@ def view_results():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/teacherHome")
@@ -753,7 +758,7 @@ def searchstudent():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -766,7 +771,7 @@ def searchstudent():
             try:
                 conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                        user="DARKKNIGHT",
-                                       passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                       passwd=PASSWORD, database="DBMSFLASKPROJECT")
             except Exception as E:
                 print(E)
                 return redirect("/teacherHome")
@@ -786,7 +791,7 @@ def download_data():
         conn = ''
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as e:
             print(e)
         cur = conn.cursor()
@@ -811,7 +816,7 @@ def viewAnalysis():
     if request.method == "GET":
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return render_template("viewAnalysis.html", noNetwork=True)
@@ -828,7 +833,7 @@ def viewAnalysis():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -845,7 +850,9 @@ def viewAnalysis():
             cur.execute('''SELECT AVG(MARKS) FROM STUDENT WHERE QUIZ_ID='{}' AND MARKS != '{}' '''.format(quizId, None))
             conn.commit()
             avgMark = cur.fetchall()[0][0]
-            cur.execute('''SELECT COUNT(*) FROM STUDENT WHERE QUIZ_ID='{}' AND MARKS >= '{}' AND MARKS !='None' '''.format(quizId, avgMark))
+            cur.execute(
+                '''SELECT COUNT(*) FROM STUDENT WHERE QUIZ_ID='{}' AND MARKS >= '{}' AND MARKS !='None' '''.format(
+                    quizId, avgMark))
             conn.commit()
             aboveAvg = cur.fetchall()[0][0]
             belowAvg = int(noOfStudentsAttempted) - int(aboveAvg)
@@ -860,7 +867,7 @@ def detailedAnalysis():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/teacherHome")
@@ -870,10 +877,11 @@ def detailedAnalysis():
     cur.execute('''SELECT NO_OF_QUESTIONS FROM QUIZ WHERE QUIZ_ID='{}' '''.format(quiz_Id))
     totQuestions = cur.fetchall()[0][0]
     totalQuestions = totQuestions
-    for q in range(1, totQuestions+1):
+    for q in range(1, totQuestions + 1):
         for i in range(1, 5):
             cur.execute(
-                '''SELECT COUNT(*) FROM ANSWERS WHERE QUIZ_ID='{}' AND ANSWER='{}' AND Q_NO='{}' '''.format(quiz_Id, i, q))
+                '''SELECT COUNT(*) FROM ANSWERS WHERE QUIZ_ID='{}' AND ANSWER='{}' AND Q_NO='{}' '''.format(quiz_Id, i,
+                                                                                                            q))
             answers = cur.fetchall()
             sl.append(answers[0][0])
         print(sl)
@@ -894,12 +902,13 @@ def detailedAnalysis():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
         cur = conn.cursor()
-        cur.execute('''SELECT CRCT_ANS FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quiz_Id, slices.index(s)+1))
+        cur.execute(
+            '''SELECT CRCT_ANS FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quiz_Id, slices.index(s) + 1))
         cAns = cur.fetchall()
         correctlyAnswered = 0
         if cAns[0][0] == '1':
@@ -910,7 +919,8 @@ def detailedAnalysis():
             correctlyAnswered = s[2]
         else:
             correctlyAnswered = s[3]
-        urls.append((slices.index(s)+1, sum(s), correctlyAnswered, sum(s)-correctlyAnswered, 'static/Pie_Question{}.png'.format(slices.index(s) + 1)))
+        urls.append((slices.index(s) + 1, sum(s), correctlyAnswered, sum(s) - correctlyAnswered,
+                     'static/Pie_Question{}.png'.format(slices.index(s) + 1)))
         plt.close()
     marks = []
     cur.execute(''' SELECT MARKS FROM STUDENT WHERE QUIZ_ID='{}' AND MARKS != 'None' '''.format(quiz_Id))
@@ -972,7 +982,7 @@ def deleteAccount():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/teacherHome")
@@ -1036,7 +1046,8 @@ def nxt():
         c3 = "checked"
     elif ans == '4':
         c4 = "checked"
-    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions, qno=presentQuestion,
+    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions,
+                           qno=presentQuestion,
                            Loop=[x for x in range(1, totalQuestions + 1)], c1=c1, c2=c2, c3=c3, c4=c4)
 
 
@@ -1072,7 +1083,8 @@ def prev():
         c3 = "checked"
     elif ans == '4':
         c4 = "checked"
-    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions, qno=presentQuestion,
+    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions,
+                           qno=presentQuestion,
                            Loop=[x for x in range(1, totalQuestions + 1)], c1=c1, c2=c2, c3=c3, c4=c4)
 
 
@@ -1096,7 +1108,8 @@ def goto():
         c3 = "checked"
     elif ans == '4':
         c4 = "checked"
-    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions, qno=presentQuestion,
+    return render_template("studentHome.html", endTime=eTime, Questions=Questions, total=totalQuestions,
+                           qno=presentQuestion,
                            Loop=[x for x in range(1, totalQuestions + 1)], c1=c1, c2=c2, c3=c3, c4=c4)
 
 
@@ -1108,7 +1121,7 @@ def autoSubmit():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/studentHome")
@@ -1128,7 +1141,7 @@ def autoSubmit():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/teacherHome")
@@ -1161,16 +1174,17 @@ def autoSubmit():
             noOfQuestionsAnsweredWrongly += 1
             marks += int(data[0][4])
     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
     cur = conn.cursor()
     cur.execute(
-        '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "S", quiz_Id, student_Id))
+        '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "S", quiz_Id,
+                                                                                                 student_Id))
     conn.commit()
     conn.close()
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/teacherHome")
@@ -1185,7 +1199,7 @@ def autoSubmit():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/teacherHome")
@@ -1252,7 +1266,7 @@ def download():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/")
@@ -1270,7 +1284,7 @@ def download():
     # print(answered)
     noOfQuestionsAnswered = len(answered)
     conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
-                           passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                           passwd=PASSWORD, database="DBMSFLASKPROJECT")
     cur = conn.cursor()
 
     cur.execute('''SELECT Q_NO, CRCT_ANS FROM QUESTIONS WHERE QUIZ_ID='{}' '''.format(quiz_Id))
@@ -1303,7 +1317,7 @@ def download():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/")
@@ -1368,7 +1382,7 @@ def sendotp():
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                user="DARKKNIGHT",
-                               passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
         return redirect("/")
@@ -1466,7 +1480,7 @@ def reset_password():
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
                                    user="DARKKNIGHT",
-                                   passwd="VjwA2vpn7Bazbui", database="DBMSFLASKPROJECT")
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
             return redirect("/")
