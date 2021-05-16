@@ -82,6 +82,26 @@
       background: grey;
       border-radius: 10px;
     }
+    input[type="submit"]
+    {
+      display: block;
+      margin: 20px auto;
+      background: none;
+      border: 2px solid #ff1255;
+      color: white;
+      font-family: cursive;
+      width: 100px;
+      padding: 14px 10px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: 0.5s;
+    }
+    input[type="submit"]:hover,
+    input[type="submit"]:focus
+    {
+      width: 180px;
+      background: #ff1255;
+    }
     </style>
   </head>
   <body>
@@ -202,6 +222,9 @@
               {%endif%}>{{question.5}}</span></p>
           </div>
         {%endfor%}
+        <form class="backClass" action="/" method="post">
+          <input type="submit" name="Back" value="Back">
+        </form>
       </div>
     </div>
   </body>
