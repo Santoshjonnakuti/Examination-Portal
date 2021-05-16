@@ -14,3 +14,16 @@ Modules required
 9. csv
 10. datetime
 11. statistics
+
+
+Credits:
+
+https://www.youtube.com/watch?v=HV7DtH3J2PU
+
+https://www.youtube.com/watch?v=cP2BsMhsldI
+
+https://www.cluemediator.com/how-to-disable-the-browser-back-button-using-javascript
+
+https://www.geeksforgeeks.org/graph-plotting-in-python-set-1/
+
+https://www.geeksforgeeks.org/how-to-create-linear-gradient-text-using-html-and-css/
