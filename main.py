@@ -22,6 +22,7 @@ global eTime
 global flag
 global random_number
 global mail_id
+global teacherName
 teacher_Id = None
 student_Id = None
 quiz_Id = None
@@ -76,7 +77,7 @@ def index():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     global presentQuestion, totalQuestions, Questions, flag
-    global teacher_Id, student_Id, quiz_Id, eTime
+    global teacher_Id, student_Id, quiz_Id, teacherName, eTime
     uName = request.form.get("username")
     pwd = request.form.get("password")
     name = ""
@@ -99,11 +100,12 @@ def login():
         print(details)
         if details and (quizId == "" or quizId is None):
             name = details[0][1] + " " + details[0][2]
+            teacherName = name
             Password = details[0][6]
             # If Password Matched
             if pwd == Password:
                 teacher_Id = uName
-                return render_template("teacherHome.html", username=uName)
+                return render_template("teacherHome.html", username=teacherName)
             # If Password is Wrong
             else:
                 return render_template("teacher.html", wrngPwd=True, uName=uName, pwd=pwd)
@@ -446,14 +448,14 @@ def singup():
 # Teacher Home Route
 @app.route("/teacherHome", methods=["GET", "POST"])
 def teacherHome():
-    global teacher_Id
-    return render_template("teacherHome.html", username=teacher_Id)
+    global teacherName
+    return render_template("teacherHome.html", username=teacherName)
 
 
 # Route to clear files created in local Database
 @app.route("/clear")
 def clear():
-    global totalQuestions, teacher_Id
+    global totalQuestions, teacher_Id, teacherName
     for ques in range(1, totalQuestions + 1):
         if os.path.exists("static/Pie_Question{}.png".format(ques)):
             os.remove("static/Pie_Question{}.png".format(ques))
@@ -465,7 +467,7 @@ def clear():
 # Route to create Quiz
 @app.route("/CreateQuiz", methods=["GET", "POST"])
 def createQuiz():
-    global quiz_Id, teacher_Id
+    global quiz_Id, teacher_Id, teacherName
     print("Hello", teacher_Id)
     if request.method == "GET":
         return render_template("TeacherCreateQuiz.html")
@@ -476,7 +478,7 @@ def createQuiz():
                                    passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
-            return render_template("TeacherCreateQuiz.html", username=teacher_Id, noNetwork=True)
+            return render_template("TeacherCreateQuiz.html", username=teacherName, noNetwork=True)
         cur = conn.cursor()
         # Generating a random unique Quiz id
         QuizId = ''
@@ -502,20 +504,20 @@ def createQuiz():
                     .format(teacher_Id, QuizId, noOfQues, startTime, endTime, instructions, cMarks, wMarks))
         conn.commit()
         conn.close()
-        return render_template("teacherHome.html", quizId=QuizId, quizAdded=True, username=teacher_Id)
+        return render_template("teacherHome.html", quizId=QuizId, quizAdded=True, username=teacherName)
 
 
 # Route to Modify the Quiz
 @app.route("/modifyQuiz", methods=["POST"])
 def modifyQuiz():
-    global teacher_Id
+    global teacher_Id, teacherName
     # Checking whether the user having an internet Connection or not
     try:
         conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185, user="DARKKNIGHT",
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", username=teacher_Id, noNetwork=True)
+        return render_template("teacherlogin1.html", username=teacherName, noNetwork=True)
     cur = conn.cursor()
     # Fetching all quiz's of the Teacher
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -524,12 +526,13 @@ def modifyQuiz():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", data=data, username=teacher_Id)
+    return render_template("teacherlogin1.html", data=data, username=teacherName)
 
 
 # Route to add Questions into the particular quiz
 @app.route("/add", methods=["POST"])
 def addQuestion():
+    global teacherName, teacher_Id
     # Getting the Details entered by the user
     quizId = request.form.get("QuizId")
     quesNo = request.form.get("QuestionNumber")
@@ -550,7 +553,7 @@ def addQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     cur.execute('''SELECT NO_OF_QUESTIONS FROM QUIZ WHERE QUIZ_ID='{}' '''.format(quizId))
     totQuestions = cur.fetchall()[0][0]
@@ -558,7 +561,7 @@ def addQuestion():
     questions = cur.fetchall()[0][0]
     # Checking if the questions exceeding the total no of questions or not
     if int(questions) >= int(totQuestions):
-        return render_template("teacherlogin1.html", full=True)
+        return render_template("teacherlogin1.html", full=True, username=teacherName)
     # Inserting the Question into the Database
     cur.execute('''INSERT INTO QUESTIONS VALUES('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
     '''.format(quizId, quesNo, ques, op1, op2, op3, op4, crctAns))
@@ -569,7 +572,7 @@ def addQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Fetching the Quiz id's of the user
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -578,12 +581,13 @@ def addQuestion():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionAdded=True, data=data)
+    return render_template("teacherlogin1.html", questionAdded=True, data=data, username=teacherName)
 
 
 # Route to update a Question
 @app.route("/update", methods=["POST"])
 def updateQuestion():
+    global teacherName, teacher_Id
     # Getting the values entered by the user
     quizId = request.form.get("QuizId")
     quesNo = request.form.get("QuestionNumber")
@@ -600,7 +604,7 @@ def updateQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Updating the Question in the Database
     cur.execute('''UPDATE QUESTIONS SET QUESTION='{}', OP_1='{}', OP_2='{}', OP_3='{}', OP_4='{}', CRCT_ANS='{}' WHERE 
@@ -612,7 +616,7 @@ def updateQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Fetching the Quiz id's of the particular user
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -622,12 +626,13 @@ def updateQuestion():
     # Closing the Database Connection
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionUpdated=True, data=data)
+    return render_template("teacherlogin1.html", questionUpdated=True, data=data, username=teacherName)
 
 
 # Route to Delete A Question
 @app.route("/delete", methods=["POST"])
 def deleteQuestion():
+    global teacherName, teacher_Id
     # Getting the Values Entered by the user
     quizId = request.form.get("QuizId")
     quesNo = request.form.get("QuestionNumber")
@@ -637,7 +642,7 @@ def deleteQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Deleting the Question from the Database
     cur.execute('''DELETE FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quizId, quesNo))
@@ -649,7 +654,7 @@ def deleteQuestion():
                                passwd=PASSWORD, database="DBMSFLASKPROJECT")
     except Exception as E:
         print(E)
-        return render_template("teacherlogin1.html", noNetwork=True)
+        return render_template("teacherlogin1.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
     data = cur.fetchall()
@@ -657,12 +662,13 @@ def deleteQuestion():
     print(teacher_Id)
     conn.commit()
     conn.close()
-    return render_template("teacherlogin1.html", questionDeleted=True, data=data)
+    return render_template("teacherlogin1.html", questionDeleted=True, data=data, username=teacherName)
 
 
 # Route to Show all the Questions in the Quiz
 @app.route("/showAll", methods=["POST"])
 def showAllQuestion():
+    global teacherName, teacher_Id
     # Getting the Quiz id entered by the user
     quizId = request.form.get("QuizId")
     # Checking for a stable connection and connecting to the database
@@ -672,7 +678,7 @@ def showAllQuestion():
     # If no Network
     except Exception as E:
         print(E)
-        return render_template("showAll.html", noNetwork=True)
+        return render_template("showAll.html", noNetwork=True, username=teacherName)
     cur = conn.cursor()
     # Fetching the Questions from the Database
     cur.execute('''SELECT * FROM QUESTIONS WHERE QUIZ_ID='{}' '''.format(quizId))
@@ -694,7 +700,7 @@ def showAllQuestion():
 # Route to Invite the Students
 @app.route("/inviteStudents", methods=["GET", "POST"])
 def inviteStudents():
-    global teacher_Id, quiz_Id, student_Id
+    global teacher_Id, quiz_Id, student_Id, teacherName
     teacher_Id = teacher_Id
     if request.method == "GET":
         # Checking for a stable internet connection and Connecting to the database
@@ -792,13 +798,13 @@ def inviteStudents():
             mail.send(message)
         # Closing Database Connection
         conn.close()
-        return render_template("teacherHome.html", username=teacher_Id)
+        return render_template("teacherHome.html", username=teacherName)
 
 
 # Route to view Results
 @app.route("/viewResults", methods=["GET", "POST"])
 def view_results():
-    global quiz_Id, teacher_Id
+    global quiz_Id, teacher_Id, teacherName
     if request.method == "GET":
         # Checking for a stable connection and Connecting to the Database
         try:
@@ -813,7 +819,7 @@ def view_results():
         cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
         data = cur.fetchall()
         print(data)
-        return render_template("viewResults.html", username=teacher_Id, data=data)
+        return render_template("viewResults.html", username=teacherName, data=data)
     # Getting the Quiz id entered by the user
     quizId = request.form.get('QuizId')
     if quizId:
@@ -910,7 +916,7 @@ def download_data():
 # Route to view the Analysis
 @app.route("/viewAnalysis", methods=["GET", "POST"])
 def viewAnalysis():
-    global teacher_Id, quiz_Id
+    global teacher_Id, quiz_Id, teacherName
     if request.method == "GET":
         # Checking for a stable connection and connecting to the Database
         try:
@@ -918,7 +924,7 @@ def viewAnalysis():
                                    passwd=PASSWORD, database="DBMSFLASKPROJECT")
         except Exception as E:
             print(E)
-            return render_template("viewAnalysis.html", noNetwork=True)
+            return render_template("viewAnalysis.html", noNetwork=True, username=teacherName)
         cur = conn.cursor()
         # Fetching all Quiz id's of that user from Database
         cur.execute('''SELECT QUIZ_ID FROM QUIZ WHERE TEACHER='{}' '''.format(teacher_Id))
@@ -927,7 +933,7 @@ def viewAnalysis():
         # Committing and Closing the Database Connection
         conn.commit()
         conn.close()
-        return render_template("viewAnalysis.html", data=data)
+        return render_template("viewAnalysis.html", data=data, username=teacherName)
     else:
         # Getting the Quiz id entered by the user
         quizId = request.form.get("QuizId")
@@ -1103,7 +1109,7 @@ def detailedAnalysis():
 # Route To Delete Account
 @app.route("/deleteAccount", methods=["GET", "POST"])
 def deleteAccount():
-    global teacher_Id
+    global teacher_Id, teacherName
     if request.method == 'GET':
         return render_template("deleteAccount.html")
     # Checking the User's response
@@ -1130,10 +1136,9 @@ def deleteAccount():
             cur.execute('''DELETE  FROM TEACHER WHERE EMAIL='{}' '''.format(teacher_Id))
             conn.commit()
             conn.close()
-        print("Executed all this shit")
-        return render_template("index.html")
+        return render_template("index.html", accountDeleted=True, username=teacherName)
     print("Redirected")
-    return redirect("/")
+    return redirect("/teacherHome")
 
 
 # Route to Student Home
