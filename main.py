@@ -1400,9 +1400,15 @@ def download():
     print(data)
     conn.commit()
     conn.close()
-    conn = sqlite3.connect("Answers.sqlite")
+    try:
+        conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
+                               user="DARKKNIGHT",
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
+    except Exception as E:
+        print(E)
+        return redirect("/")
     cur = conn.cursor()
-    cur.execute('''SELECT * FROM ANSWERS WHERE ANSWER != ?''', ("",))
+    cur.execute('''SELECT * FROM ANSWERS WHERE ANSWER != '{}' AND QUIZ_ID='{}' AND STUDENT='{}' '''.format(None, quiz_Id, student_Id))
     answered = cur.fetchall()
     noOfQuestionsAnswered = len(answered)
     # Checking for Stable connection and Connecting to the Database
@@ -1425,10 +1431,15 @@ def download():
     noOfQuestionsAnsweredCorrectly = 0
     noOfQuestionsAnsweredWrongly = 0
     marks = 0
-    # Fetching Answers of the Student from the Local Database
-    conn = sqlite3.connect("Answers.sqlite")
+    try:
+        conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
+                               user="DARKKNIGHT",
+                               passwd=PASSWORD, database="DBMSFLASKPROJECT")
+    except Exception as E:
+        print(E)
+        return redirect("/")
     cur = conn.cursor()
-    cur.execute('''SELECT * FROM ANSWERS''')
+    cur.execute('''SELECT Q_NO, ANSWER FROM ANSWERS WHERE QUIZ_ID='{}' AND STUDENT='{}' '''.format(quiz_Id, student_Id))
     answered = cur.fetchall()
     conn.commit()
     conn.close()
@@ -1471,9 +1482,16 @@ def download():
             c3 = "dodgerblue"
         else:
             c4 = "dodgerblue"
-        conn = sqlite3.connect("Answers.sqlite")
+        try:
+            conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
+                                   user="DARKKNIGHT",
+                                   passwd=PASSWORD, database="DBMSFLASKPROJECT")
+        except Exception as E:
+            print(E)
+            return redirect("/")
         cur = conn.cursor()
-        cur.execute('''SELECT ANSWER FROM ANSWERS WHERE QUESTION_NUMBER = ?''', (q[0],))
+        cur.execute('''SELECT ANSWER FROM ANSWERS WHERE Q_NO= '{}' AND QUIZ_ID='{}' AND STUDENT='{}' '''.format(
+            q[0], quiz_Id, student_Id))
         sAns = cur.fetchall()
         print(sAns)
         conn.commit()
