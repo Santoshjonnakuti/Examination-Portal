@@ -152,7 +152,7 @@
         <form class="inviteStudents" action="/viewResults" method="post">
           <label>Quiz Id</label>
           <input type="list" name="QuizId" value="" list="quizIds"
-          placeholder="Quiz Id" required>
+          placeholder="Quiz Id" required autocomplete="off">
             <datalist id="quizIds">
               {%for item in data%}
                 <option value="{{item.0}}"></option>
