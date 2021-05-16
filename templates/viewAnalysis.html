@@ -110,7 +110,7 @@
       <h1>Quiz Analysis</h1><br><br>
       <form class="quizAnalysisClass" action="/viewAnalysis" method="post">
         <label>Select Quiz Id</label>
-        <input type="list" name="QuizId" value="" list="quizIdS" placeholder="Quiz Id" required>
+        <input type="list" name="QuizId" value="" list="quizIdS" placeholder="Quiz Id" required autocomplete="off">
         <datalist id="quizIdS">
           {%for item in data%}
             <option value="{{item.0}}"></option>
