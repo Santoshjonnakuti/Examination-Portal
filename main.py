@@ -1347,14 +1347,12 @@ def autoSubmit():
     # If Flag is 0 that means student didn't do any mal practice so flag will be S->No Mal Practice
     if flag == 0:
         cur.execute(
-            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "S",
-                                                                                                     quiz_Id,
+            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "S", quiz_Id,
                                                                                                      student_Id))
     # If Flag is not 0  that means student did mal practice so flag will be M->Malpractice
     else:
         cur.execute(
-            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "M",
-                                                                                                     quiz_Id,
+            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "M", quiz_Id,
                                                                                                      student_Id))
         flag = 0
     conn.commit()
