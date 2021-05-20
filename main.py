@@ -995,7 +995,7 @@ def detailedAnalysis():
     totQuestions = cur.fetchall()[0][0]
     totalQuestions = totQuestions
     # Selecting Students who answered question with option 1, option 2, option 3, option 4 for every question with quiz
-    for q in range(1, totQuestions + 1):
+    for q in range(0, totQuestions):
         for i in range(1, 5):
             cur.execute(
                 '''SELECT COUNT(*) FROM ANSWERS WHERE QUIZ_ID='{}' AND ANSWER='{}' AND Q_NO='{}' '''.format(quiz_Id, i,
@@ -1018,7 +1018,7 @@ def detailedAnalysis():
                 startangle=90, shadow=True, explode=(0, 0, 0.1, 0),
                 radius=1.2, autopct='%1.1f%%')
         plt.legend()
-        plt.savefig('static/Pie_Question{}.png'.format(slices.index(s) + 1))
+        plt.savefig('static/Pie_Question{}.png'.format(slices.index(s)))
         # Checking for a stable connection and connecting to the database
         try:
             conn = pymysql.connect(host="mysql-29185-0.cloudclusters.net", port=29185,
@@ -1030,7 +1030,7 @@ def detailedAnalysis():
         cur = conn.cursor()
         # Selecting correcting answer of that question in that quiz from Database
         cur.execute(
-            '''SELECT CRCT_ANS FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quiz_Id, slices.index(s) + 1))
+            '''SELECT CRCT_ANS FROM QUESTIONS WHERE QUIZ_ID='{}' AND Q_NO='{}' '''.format(quiz_Id, slices.index(s)+1))
         cAns = cur.fetchall()
         correctlyAnswered = 0
         if cAns[0][0] == '1':
@@ -1042,8 +1042,8 @@ def detailedAnalysis():
         else:
             correctlyAnswered = s[3]
         # Appending the paths of pie chart in urls
-        urls.append((slices.index(s) + 1, sum(s), correctlyAnswered, sum(s) - correctlyAnswered,
-                     'static/Pie_Question{}.png'.format(slices.index(s) + 1)))
+        urls.append((slices.index(s), sum(s), correctlyAnswered, sum(s) - correctlyAnswered,
+                     'static/Pie_Question{}.png'.format(slices.index(s))))
         plt.close()
     marks = []
     # Fetching Marks of Students of that Quiz from Database
