@@ -1133,9 +1133,12 @@ def deleteAccount():
             cur.execute('''DELETE  FROM QUESTIONS WHERE QUIZ_ID='{}' '''.format(item[0]))
             cur.execute('''DELETE  FROM ANSWERS WHERE QUIZ_ID='{}' '''.format(item[0]))
             cur.execute('''DELETE  FROM STUDENT WHERE QUIZ_ID='{}' '''.format(item[0]))
+            conn.commit()
+        if not quizIds:
             cur.execute('''DELETE  FROM TEACHER WHERE EMAIL='{}' '''.format(teacher_Id))
             conn.commit()
             conn.close()
+
         return render_template("index.html", accountDeleted=True, username=teacherName)
     print("Redirected")
     return redirect("/teacherHome")
