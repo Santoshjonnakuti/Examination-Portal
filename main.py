@@ -30,6 +30,8 @@ global flag
 flag = 0
 # Initializing Flask Application
 app = Flask(__name__)
+
+# Fetching the Password of the Database from the Txt file
 PASSWORD = ''
 with open('Details.txt', 'r') as f:
     PASSWORD = f.readline()
