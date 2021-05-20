@@ -120,6 +120,7 @@ This **Examination portal** has a unique way of avoiding **malpractice** in whic
 
 ![StudentResponse](https://user-images.githubusercontent.com/61138723/118992601-6aa57180-b9a2-11eb-9ff4-2ef5590d8d5d.jpg)
 
+---
 #### Credits
 
 - Design
