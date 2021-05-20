@@ -6,6 +6,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/santoshjonnakuti/Examination-Portal)
 ![GitHub language count](https://img.shields.io/github/languages/count/santoshjonnakuti/Examination-Portal)
 ![GitHub top language](https://img.shields.io/github/languages/top/SANTOSHJONNAKUTI/EXAMINATION-PORTAL?label=HTML&logo=HTML5)
+![Python](https://img.shields.io/static/v1?label=Python&message=38.3%&color=blue&logo=Python)
 <br/><br/>
 This is a Simple Online Examination Platform to conduct an exam/quiz.<br/>
 This is our **4th Semester Project for Database Management System[DBMS] course.**
