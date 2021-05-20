@@ -1353,7 +1353,7 @@ def autoSubmit():
     # If Flag is not 0  that means student did mal practice so flag will be M->Malpractice
     else:
         cur.execute(
-            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "S",
+            '''UPDATE STUDENT SET MARKS='{}', FLAG='{}' WHERE QUIZ_ID='{}' AND EMAIL='{}' '''.format(marks, "M",
                                                                                                      quiz_Id,
                                                                                                      student_Id))
         flag = 0
