@@ -2,7 +2,7 @@
 
 ![GitHub contributors](https://img.shields.io/github/contributors/santoshjonnakuti/Examination-Portal)
 ![GitHub last commit](https://img.shields.io/github/last-commit/santoshjonnakuti/Examination-Portal)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/santoshjonnakuti/Examination-Portal)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/santoshjonnakuti/examination-portal)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/santoshjonnakuti/Examination-Portal)
 ![GitHub language count](https://img.shields.io/github/languages/count/santoshjonnakuti/Examination-Portal)
 ![GitHub top language](https://img.shields.io/github/languages/top/SANTOSHJONNAKUTI/EXAMINATION-PORTAL?label=HTML&logo=HTML5)
