@@ -1273,6 +1273,18 @@ def goto():
 def autoSubmit():
     global quiz_Id, student_Id, teacher_Id, flag
     global presentQuestion, totalQuestions, Questions
+    val = request.form.getlist("Options")
+    print(val)
+    conn = sqlite3.connect("Answers.sqlite")
+    cur = conn.cursor()
+    # Updating the Response of the present question in the Local Database
+    if val:
+        cur.execute('''UPDATE ANSWERS SET ANSWER=? WHERE QUESTION_NUMBER=?''', (val[0], presentQuestion))
+    else:
+        cur.execute('''UPDATE ANSWERS SET ANSWER=? WHERE QUESTION_NUMBER=?''', (None, presentQuestion))
+    # Committing and Closing the Local Database Connection
+    conn.commit()
+    conn.close()
     print("Submitted")
     # Checking for a stable connection and Connecting to the Database
     try:
