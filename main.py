@@ -1244,6 +1244,19 @@ def prev():
 @app.route("/goto", methods=["POST"])
 def goto():
     global presentQuestion, Questions, totalQuestions
+    # Getting the Response of the present Question
+    val = request.form.getlist("Options")
+    print(val)
+    conn = sqlite3.connect("Answers.sqlite")
+    cur = conn.cursor()
+    # Updating the Response of the present question in the Local Database
+    if val:
+        cur.execute('''UPDATE ANSWERS SET ANSWER=? WHERE QUESTION_NUMBER=?''', (val[0], presentQuestion))
+    else:
+        cur.execute('''UPDATE ANSWERS SET ANSWER=? WHERE QUESTION_NUMBER=?''', (None, presentQuestion))
+    # Committing and Closing the Local Database Connection
+    conn.commit()
+    conn.close()
     # Getting the value of the question to which student wants to navigate
     btn = request.form.get("Navigate")
     presentQuestion = int(btn) - 1
