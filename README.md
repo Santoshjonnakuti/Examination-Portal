@@ -14,14 +14,7 @@ This is a Simple Online Examination Platform to conduct an exam/quiz.<br/>
 This is our **4th Semester Project for Database Management System[DBMS](https://en.wikipedia.org/wiki/Database#Database_management_system) course.**
 
 ---
-### Contributors
-1. Danam Yashwanth Kumar&nbsp;&nbsp;&nbsp;&nbsp; [![GitHub followers](https://img.shields.io/github/followers/yash07a?style=social)](https://github.com/yash07a) 
-2. Jonnakuti Santosh&nbsp;&nbsp;&nbsp;&nbsp; [![GitHub followers](https://img.shields.io/github/followers/santoshjonnakuti?style=social)](https://github.com/Santoshjonnakuti) 
-3. L S Yashwanth Kumar&nbsp;&nbsp;&nbsp;&nbsp; [![GitHub followers](https://img.shields.io/github/followers/24yashwanth?style=social)](https://github.com/24yashwanth) 
-4. Mailapalli Purushotham&nbsp;&nbsp;&nbsp;&nbsp; [![GitHub followers](https://img.shields.io/github/followers/purus15987?style=social)](https://github.com/purus15987) 
-5. Rasamsetty Naga Venkata Sai&nbsp;&nbsp;&nbsp;&nbsp; 
-6. Terala Manikiran&nbsp;&nbsp;&nbsp;&nbsp; [![GitHub followers](https://img.shields.io/github/followers/mani2002?style=social)](https://github.com/mani2002)
----
+
 ### Languages Used
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
