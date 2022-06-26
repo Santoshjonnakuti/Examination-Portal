@@ -11,7 +11,7 @@
 ![Python](https://img.shields.io/static/v1?label=Python&message=38.7%&color=blue&logo=Python)
 <br/><br/>
 This is a Simple Online Examination Platform to conduct an exam/quiz.<br/>
-This is our **4th Semester Project for Database Management System[DBMS](https://en.wikipedia.org/wiki/Database#Database_management_system) course.**
+This is our **4th Semester Project for (Database Management System)[DBMS](https://en.wikipedia.org/wiki/Database#Database_management_system) course.**
 
 ---
 ### Contributors
